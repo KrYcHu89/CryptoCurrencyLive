@@ -20,6 +20,7 @@ object NetworkUtils {
     fun getRequest(url: String): String {
 
         val okHttpClient = OkHttpClient.Builder()
+
                 .connectTimeout(10, TimeUnit.SECONDS)
                 .writeTimeout(10, TimeUnit.SECONDS)
                 .readTimeout(20, TimeUnit.SECONDS)

@@ -98,7 +98,7 @@ class MainActivity : AppCompatActivity() {
         override fun onPostExecute(result: String?) {
             super.onPostExecute(result)
 
-            val pairList = Utils.jsonPairToList(JSONArray(result))
+            val pairList = Utils.jsonArrayToList(JSONArray(result))
 
             adapter.setData(pairList)
         }
