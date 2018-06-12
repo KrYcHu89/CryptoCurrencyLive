@@ -1,111 +1,66 @@
 package com.csbenz.cryptocurrencylive.ui.pairs
 
-import android.content.Context
 import android.content.Intent
-import android.os.AsyncTask
 import android.os.Bundle
-import android.support.v7.app.AlertDialog
+import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import com.csbenz.cryptocurrencylive.Constants
 import com.csbenz.cryptocurrencylive.R
+import com.csbenz.cryptocurrencylive.network.NetworkUtils
 import com.csbenz.cryptocurrencylive.ui.details.DetailsActivity
-import com.csbenz.cryptocurrencylive.utils.NetworkUtils
 import com.csbenz.cryptocurrencylive.utils.Utils
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_pairs.*
+import org.jetbrains.anko.doAsync
 import org.json.JSONArray
-import java.lang.ref.WeakReference
+import java.net.URL
 
 class PairsActivity : AppCompatActivity() {
 
     private lateinit var pairAdapter: PairAdapter
+    private lateinit var noNetworkSnackbar: Snackbar
 
-    private var asyncTask: AsyncTask<Void, Void, String>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_pairs)
 
         pairAdapter = PairAdapter(ArrayList(), this, { pair -> launchDetailsActivity(pair) })
 
         rv_pairs.layoutManager = LinearLayoutManager(this)
         rv_pairs.adapter = pairAdapter
 
-        fetchAndUpdatePairs()
     }
 
-    override fun onStop() {
-        super.onStop()
 
-        asyncTask?.cancel(true)
+    override fun onResume() {
+        super.onResume()
+
+        fetchAndUpdatePairs()
     }
 
     /**
      * Fetch currency pairs from Bitfinex and update the UI. Done asynchronously.
      */
     private fun fetchAndUpdatePairs() {
-        asyncTask?.cancel(true)
+        if (NetworkUtils.isNetworkAvailable(this)) {
 
-        asyncTask = GetPairsAsyncTask(this, pairAdapter, Constants.BITFINEX_PAIR_LIST_URL).execute()
-    }
+            doAsync {
+                val response = URL(Constants.BITFINEX_PAIR_LIST_URL).readText()  //NetworkUtils.getRequest(Constants.BITFINEX_PAIR_LIST_URL)
+                runOnUiThread {
+                    val pairList = Utils.jsonArrayToList(JSONArray(response))
 
-    class GetPairsAsyncTask() : AsyncTask<Void, Void, String>() {
-
-        private lateinit var adapter: PairAdapter
-        private lateinit var contextRef: WeakReference<Context>
-        private lateinit var url: String
-
-        constructor(context: Context, adapter: PairAdapter, url: String) : this() {
-            this.contextRef = WeakReference(context)
-            this.adapter = adapter
-            this.url = url
-        }
-
-
-        override fun onPreExecute() {
-            super.onPreExecute()
-
-            if (!isCancelled) {
-                // stop processing
+                    pairAdapter.setData(pairList)
+                }
             }
 
-            // TODO add dialog, spinning icon, network connectivity logic
-
-            if (!NetworkUtils.isNetworkAvailable(contextRef.get())) {
-
-                AlertDialog.Builder(contextRef.get()!!) // TODO double excl
-                        .setTitle("Connectivity")
-                        .setMessage("Please check your internet connection")
-                        .setCancelable(false)
-                        .setNegativeButton("OK") { dialog, _ ->
-                            dialog.dismiss()
-                        }
-                        .setPositiveButton("Try again") { _, _ ->
-                            GetPairsAsyncTask(contextRef.get()!!, adapter, url).execute()
-                        }
-                        .show()
-
-                this.cancel(true)
-            }
-        }
-
-        override fun doInBackground(vararg params: Void?): String {
-            var response = ""
-
-            if (!isCancelled) {
-                response = NetworkUtils.getRequest(url)
-            }
-
-            return response
-        }
-
-
-        override fun onPostExecute(result: String?) {
-            super.onPostExecute(result)
-
-            val pairList = Utils.jsonArrayToList(JSONArray(result))
-
-            adapter.setData(pairList)
+        } else {
+            noNetworkSnackbar = Snackbar.make(pairs_root_layout, getString(R.string.network_unavailable), Snackbar.LENGTH_INDEFINITE)
+            noNetworkSnackbar.setAction(getString(R.string.retry_network), {
+                noNetworkSnackbar.dismiss()
+                fetchAndUpdatePairs()
+            })
+            noNetworkSnackbar.show()
         }
     }
 

@@ -18,6 +18,7 @@ import org.json.JSONTokener
 
 class OrderBookFragment : Fragment() {
 
+
     private val ORDERS_TO_DISPLAY = 15
 
     private lateinit var bidOrderAdapter: OrderAdapter
@@ -133,6 +134,12 @@ class OrderBookFragment : Fragment() {
                     // something else, ignore
                 }
             }
+        }
+
+        override fun onFailure(webSocket: WebSocket?, t: Throwable?, response: Response?) {
+            super.onFailure(webSocket, t, response)
+            Log.v("crypto", "onFailure!!")
+
         }
 
         /*

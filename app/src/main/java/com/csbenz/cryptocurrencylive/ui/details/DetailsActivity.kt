@@ -1,14 +1,16 @@
 package com.csbenz.cryptocurrencylive.ui.details
 
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import com.csbenz.cryptocurrencylive.Constants
 import com.csbenz.cryptocurrencylive.R
-import com.csbenz.cryptocurrencylive.utils.NetworkUtils
+import com.csbenz.cryptocurrencylive.network.NetworkUtils
 import kotlinx.android.synthetic.main.activity_details.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import org.json.JSONObject
+import java.net.URL
 
 
 class DetailsActivity : AppCompatActivity() {
@@ -19,6 +21,7 @@ class DetailsActivity : AppCompatActivity() {
     val SUMMARY_LAST_PRICE_KEY = "last_price"
 
     private lateinit var pairName: String
+    private lateinit var noNetworkSnackbar: Snackbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,11 +37,21 @@ class DetailsActivity : AppCompatActivity() {
     }
 
     private fun fetchSummary() {
-        doAsync {
-            val result = NetworkUtils.getRequest(createSummaryUrl(pairName))
-            uiThread {
-                displaySummary(result)
+        if (NetworkUtils.isNetworkAvailable(this)) {
+            doAsync {
+                val result = URL(createSummaryUrl(pairName)).readText()
+                uiThread {
+                    displaySummary(result)
+                }
             }
+        } else {
+            noNetworkSnackbar = Snackbar.make(details_root_layout, getString(R.string.network_unavailable), Snackbar.LENGTH_INDEFINITE)
+            noNetworkSnackbar.setAction(getString(R.string.retry_network), {
+                noNetworkSnackbar.dismiss()
+                fetchSummary()
+            })
+            noNetworkSnackbar.show()
+
         }
     }
 
@@ -47,7 +60,7 @@ class DetailsActivity : AppCompatActivity() {
     }
 
     private fun unJsonSummary(summary: String): String {
-        val jsonObject: JSONObject = JSONObject(summary)
+        val jsonObject = JSONObject(summary)
 
         val lastPrice = jsonObject.get(SUMMARY_LAST_PRICE_KEY)
         val high = jsonObject.get(SUMMARY_HIGH_KEY)
