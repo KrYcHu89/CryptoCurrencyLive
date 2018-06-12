@@ -1,4 +1,4 @@
-package com.csbenz.cryptocurrencylive.orderbook
+package com.csbenz.cryptocurrencylive.ui.orderbook
 
 import android.util.Log
 import android.util.Pair
@@ -6,7 +6,6 @@ import java.util.*
 
 class OrderBook(val book: TreeMap<Double, Pair<Double, Int>> = TreeMap()) {
     // Key is price, value is pair of amout-count
-
 
     fun processNewOrder(price: Double, count: Int, amount: Double) {
         if (count == 0) {
@@ -17,7 +16,6 @@ class OrderBook(val book: TreeMap<Double, Pair<Double, Int>> = TreeMap()) {
     }
 
     fun addOrder(price: Double, count: Int, amount: Double) {
-        Log.v("cryptok", "Adding order: $count  $price  $amount")
         if (book.containsKey(price) && book[price] != null) {
             book[price] = Pair(book[price]!!.first, book[price]!!.second)
         } else {
@@ -26,15 +24,8 @@ class OrderBook(val book: TreeMap<Double, Pair<Double, Int>> = TreeMap()) {
     }
 
     fun removeOrder(price: Double) {
-        Log.v("cryptok", "Removing order: $price")
-
         book.remove(price)
     }
-
-    fun getAllOrders(): List<Triple<Double, Double, Int>> {
-        return toList()
-    }
-
 
     fun getBidOrders(): List<Triple<Double, Double, Int>> {
         return toList().filter { o -> o.second > 0 }

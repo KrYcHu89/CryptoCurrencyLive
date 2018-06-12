@@ -1,4 +1,4 @@
-package com.csbenz.cryptocurrencylive
+package com.csbenz.cryptocurrencylive.utils
 
 import org.json.JSONArray
 
@@ -25,6 +25,16 @@ object Utils {
                 "   \"freq\":\"F0\",\n" +
                 "   \"length\":\"25\"\n" +
                 "}"
+        return request
+    }
+
+    fun createTradesRequest(pairName: String): String {
+        val request = "{\n" +
+                "  \"event\": \"subscribe\",\n" +
+                "  \"channel\": \"trades\",\n" +
+                "  \"pair\": \"" + pairName + "\"\n" +
+                "}"
+
         return request
     }
 }

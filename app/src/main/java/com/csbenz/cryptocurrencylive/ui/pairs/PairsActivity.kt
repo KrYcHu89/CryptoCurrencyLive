@@ -1,4 +1,4 @@
-package com.csbenz.cryptocurrencylive
+package com.csbenz.cryptocurrencylive.ui.pairs
 
 import android.content.Context
 import android.content.Intent
@@ -7,11 +7,16 @@ import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import com.csbenz.cryptocurrencylive.Constants
+import com.csbenz.cryptocurrencylive.R
+import com.csbenz.cryptocurrencylive.ui.details.DetailsActivity
+import com.csbenz.cryptocurrencylive.utils.NetworkUtils
+import com.csbenz.cryptocurrencylive.utils.Utils
 import kotlinx.android.synthetic.main.activity_main.*
 import org.json.JSONArray
 import java.lang.ref.WeakReference
 
-class MainActivity : AppCompatActivity() {
+class PairsActivity : AppCompatActivity() {
 
     private lateinit var pairAdapter: PairAdapter
 

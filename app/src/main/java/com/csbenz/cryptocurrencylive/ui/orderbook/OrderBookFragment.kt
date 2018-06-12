@@ -1,4 +1,4 @@
-package com.csbenz.cryptocurrencylive
+package com.csbenz.cryptocurrencylive.ui.orderbook
 
 import android.content.Context
 import android.os.Bundle
@@ -8,8 +8,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.csbenz.cryptocurrencylive.orderbook.OrderAdapter
-import com.csbenz.cryptocurrencylive.orderbook.OrderBook
+import com.csbenz.cryptocurrencylive.Constants
+import com.csbenz.cryptocurrencylive.R
+import com.csbenz.cryptocurrencylive.utils.Utils
 import kotlinx.android.synthetic.main.fragment_orderbook.*
 import okhttp3.*
 import org.json.JSONArray
@@ -28,6 +29,7 @@ class OrderBookFragment : Fragment() {
     private lateinit var pairName: String
     private val orderBook = OrderBook()
 
+    private var lastTimestamp: Long = 0
 
     override fun onAttach(context: Context) {
         mContext = context
@@ -68,7 +70,7 @@ class OrderBookFragment : Fragment() {
     private fun startWebsocket() {
         val client = OkHttpClient()
         val request = Request.Builder().url(Constants.BITFINEX_WEBSOCKET_URL).build()
-        val listener = BitfinexWebSocketListener()
+        val listener = OrderbookWebSocketListener()
 
         websocket = client.newWebSocket(request, listener)
 
@@ -78,8 +80,6 @@ class OrderBookFragment : Fragment() {
     private fun stopWebsocket() {
         websocket.cancel()
     }
-
-    private var lastTimestamp: Long = 0
 
     fun parseNewUpdate(jsonArray: JSONArray) {
 
@@ -118,7 +118,7 @@ class OrderBookFragment : Fragment() {
     }
 
 
-    private inner class BitfinexWebSocketListener : WebSocketListener() {
+    private inner class OrderbookWebSocketListener : WebSocketListener() {
 
         override fun onOpen(webSocket: WebSocket, response: Response) {
             webSocket.send(Utils.createBookRequest(pairName))

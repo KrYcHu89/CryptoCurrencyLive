@@ -9,10 +9,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="5"
-        android:paddingLeft="4dp"
         android:maxLines="1"
-
+        android:paddingLeft="4dp"
         android:paddingRight="4dp"
+        android:textColor="@color/red"
         android:textSize="14sp" />
 
     <TextView
@@ -25,16 +25,5 @@
         android:paddingRight="4dp"
         android:textSize="14sp" />
 
-    <TextView
-        android:id="@+id/tv_order_count"
-        android:maxLines="1"
-
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="5"
-        android:paddingLeft="4dp"
-        android:paddingRight="4dp"
-        android:textSize="14sp"
-        android:visibility="gone" />
 
 </LinearLayout>

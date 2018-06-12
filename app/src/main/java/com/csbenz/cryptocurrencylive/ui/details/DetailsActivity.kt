@@ -1,10 +1,11 @@
-package com.csbenz.cryptocurrencylive
+package com.csbenz.cryptocurrencylive.ui.details
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import com.csbenz.cryptocurrencylive.orderbook.OrderBook
+import com.csbenz.cryptocurrencylive.Constants
+import com.csbenz.cryptocurrencylive.R
+import com.csbenz.cryptocurrencylive.utils.NetworkUtils
 import kotlinx.android.synthetic.main.activity_details.*
-import okhttp3.WebSocket
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import org.json.JSONObject
@@ -17,11 +18,7 @@ class DetailsActivity : AppCompatActivity() {
     val SUMMARY_VOLUME_LEY = "volume"
     val SUMMARY_LAST_PRICE_KEY = "last_price"
 
-
-    private lateinit var websocket: WebSocket
     private lateinit var pairName: String
-
-    private val orderBook = OrderBook()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +31,6 @@ class DetailsActivity : AppCompatActivity() {
         vp_details.adapter = fragmentAdapter
 
         tabs_details.setupWithViewPager(vp_details)
-
     }
 
     private fun fetchSummary() {
@@ -58,7 +54,7 @@ class DetailsActivity : AppCompatActivity() {
         val low = jsonObject.get(SUMMARY_LOW__KEY)
         val volume = jsonObject.get(SUMMARY_VOLUME_LEY)
 
-        return "k$lastPrice\nVOL: $volume\nLOW: $low\tHIGH: $high"
+        return "$lastPrice\nVOL: $volume\nLOW: $low   HIGH: $high"
     }
 
     private fun createSummaryUrl(pairName: String): String {

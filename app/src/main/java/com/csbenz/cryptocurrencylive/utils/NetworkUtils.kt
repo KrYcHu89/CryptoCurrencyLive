@@ -1,4 +1,4 @@
-package com.csbenz.cryptocurrencylive
+package com.csbenz.cryptocurrencylive.utils
 
 import android.content.Context
 import android.net.ConnectivityManager
