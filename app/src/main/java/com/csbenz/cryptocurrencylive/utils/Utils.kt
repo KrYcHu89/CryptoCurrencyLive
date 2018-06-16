@@ -1,8 +1,25 @@
 package com.csbenz.cryptocurrencylive.utils
 
 import org.json.JSONArray
+import org.json.JSONObject
 
 object Utils {
+
+    val SUMMARY_LOW__KEY = "low"
+    val SUMMARY_HIGH_KEY = "high"
+    val SUMMARY_VOLUME_LEY = "volume"
+    val SUMMARY_LAST_PRICE_KEY = "last_price"
+
+    fun unJsonSummary(summary: String): String {
+        val jsonObject = JSONObject(summary)
+
+        val lastPrice = jsonObject.get(SUMMARY_LAST_PRICE_KEY)
+        val high = jsonObject.get(SUMMARY_HIGH_KEY)
+        val low = jsonObject.get(SUMMARY_LOW__KEY)
+        val volume = jsonObject.get(SUMMARY_VOLUME_LEY)
+
+        return "$lastPrice\nVOL: $volume\nLOW: $low   HIGH: $high"
+    }
 
     fun jsonArrayToList(jsonArray: JSONArray): ArrayList<String> {
         val l: ArrayList<String> = ArrayList()
@@ -38,4 +55,5 @@ object Utils {
 
         return request
     }
+
 }

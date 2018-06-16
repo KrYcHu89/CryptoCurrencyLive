@@ -1,6 +1,5 @@
 package com.csbenz.cryptocurrencylive.ui.orderbook
 
-import android.util.Log
 import android.util.Pair
 import java.util.*
 

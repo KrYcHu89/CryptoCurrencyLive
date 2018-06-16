@@ -60,7 +60,7 @@ class TradesFragment : Fragment() {
     private fun startWebsocket() {
         val client = OkHttpClient()
         val request = Request.Builder().url(Constants.BITFINEX_WEBSOCKET_URL).build()
-        val listener = TradesWebSocketListener()
+        val listener = TradesWebSocketListener(pairName)
 
         websocket = client.newWebSocket(request, listener)
 
@@ -101,7 +101,7 @@ class TradesFragment : Fragment() {
     }
 
 
-    private inner class TradesWebSocketListener : WebSocketListener() {
+    private inner class TradesWebSocketListener(val pairName: String) : WebSocketListener() {
 
         override fun onOpen(webSocket: WebSocket, response: Response) {
             webSocket.send(Utils.createTradesRequest(pairName))
@@ -110,6 +110,7 @@ class TradesFragment : Fragment() {
         override fun onMessage(webSocket: WebSocket?, text: String?) {
             when (JSONTokener(text).nextValue()) {
                 is JSONArray -> {
+
                     parseNewUpdate(JSONArray(text))
                 }
                 else -> {

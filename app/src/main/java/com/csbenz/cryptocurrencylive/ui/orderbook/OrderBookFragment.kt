@@ -136,7 +136,7 @@ class OrderBookFragment : Fragment() {
             }
         }
 
-        override fun onFailure(webSocket: WebSocket?, t: Throwable?, response: Response?) {
+        override fun onFailure(webSocket: WebSocket, t: Throwable?, response: Response?) {
             super.onFailure(webSocket, t, response)
             Log.v("crypto", "onFailure!!")
 
