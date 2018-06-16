@@ -90,11 +90,8 @@ class OrderBookFragment : Fragment(), ConnectivityReceiver.ConnectivityReceiverL
 
     override fun onNetworkConnectionChanged(isConnected: Boolean) {
         if (isConnected) {
-            Log.v("crpyoy", "network connected order book")
             startWebsocket()
         } else {
-            Log.v("crpyoy", "network disconnected order book")
-
             stopWebsocket()
         }
     }
@@ -155,7 +152,7 @@ class OrderBookFragment : Fragment(), ConnectivityReceiver.ConnectivityReceiverL
 
         override fun onFailure(webSocket: WebSocket, t: Throwable?, response: Response?) {
             super.onFailure(webSocket, t, response)
-            Log.v("crypto", "onFailure!!")
+            Log.v("crypto", "onFailure orderbook!!")
 
         }
 

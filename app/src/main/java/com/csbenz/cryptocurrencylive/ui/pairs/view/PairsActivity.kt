@@ -5,13 +5,12 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
-import android.util.Log
 import com.csbenz.cryptocurrencylive.Constants
 import com.csbenz.cryptocurrencylive.R
-import com.csbenz.cryptocurrencylive.ui.pairs.adapter.PairAdapter
-import com.csbenz.cryptocurrencylive.ui.pairs.presenter.PairPresenter
-import com.csbenz.cryptocurrencylive.ui.pairs.data.PairData
 import com.csbenz.cryptocurrencylive.ui.details.DetailsActivity
+import com.csbenz.cryptocurrencylive.ui.pairs.adapter.PairAdapter
+import com.csbenz.cryptocurrencylive.ui.pairs.data.PairData
+import com.csbenz.cryptocurrencylive.ui.pairs.presenter.PairPresenter
 import kotlinx.android.synthetic.main.activity_pairs.*
 
 class PairsActivity : AppCompatActivity(), PairsView {
@@ -44,8 +43,8 @@ class PairsActivity : AppCompatActivity(), PairsView {
         pairAdapter.notifyDataSetChanged()
     }
 
-    override fun displayNoNetworkSnackbar() {
-        noNetworkSnackbar = Snackbar.make(pairs_root_layout, getString(R.string.network_unavailable), Snackbar.LENGTH_INDEFINITE)
+    override fun displayNoNetworkSnackbar(errorText: String) {
+        noNetworkSnackbar = Snackbar.make(pairs_root_layout, errorText, Snackbar.LENGTH_INDEFINITE)
         noNetworkSnackbar.setAction(getString(R.string.retry_network), {
             noNetworkSnackbar.dismiss()
             presenter.fetchPairs(PairData(this))

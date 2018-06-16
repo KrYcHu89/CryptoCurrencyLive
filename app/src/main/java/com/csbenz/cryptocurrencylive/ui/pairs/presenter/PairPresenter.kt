@@ -25,8 +25,8 @@ class PairPresenter(val view: PairsView, var pairs: List<String>) {
                 view.showPairs(pairs)
             }
 
-            override fun loadingPairsFailure() {
-                view.displayNoNetworkSnackbar()
+            override fun loadingPairsFailure(errorText: String) {
+                view.displayNoNetworkSnackbar(errorText)
             }
         })
     }

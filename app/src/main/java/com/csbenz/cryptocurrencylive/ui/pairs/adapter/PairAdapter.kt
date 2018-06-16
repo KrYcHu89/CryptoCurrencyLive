@@ -5,8 +5,8 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.csbenz.cryptocurrencylive.R
-import com.csbenz.cryptocurrencylive.ui.pairs.view.PairItemViewHolder
 import com.csbenz.cryptocurrencylive.ui.pairs.presenter.PairPresenter
+import com.csbenz.cryptocurrencylive.ui.pairs.view.PairItemViewHolder
 
 class PairAdapter(val presenter: PairPresenter, val context: Context) : RecyclerView.Adapter<PairItemViewHolder>() {
 
@@ -21,12 +21,4 @@ class PairAdapter(val presenter: PairPresenter, val context: Context) : Recycler
     override fun onBindViewHolder(holder: PairItemViewHolder, position: Int) {
         presenter.onBindPairsRowViewAtPosition(position, holder)
     }
-
-    /*
-    fun setData(newItems: ArrayList<String>) {
-        items.clear()
-        items.addAll(newItems)
-        notifyDataSetChanged()
-    }
-    */
 }

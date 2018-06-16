@@ -4,7 +4,7 @@ interface PairsView {
 
     fun openDetailsActivity(pairName: String)
 
-    fun displayNoNetworkSnackbar()
+    fun displayNoNetworkSnackbar(errorText: String)
 
     fun showPairs(pairs: List<String>)
 }

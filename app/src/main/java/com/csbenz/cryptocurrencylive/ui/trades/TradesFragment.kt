@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -81,11 +80,8 @@ class TradesFragment : Fragment(), ConnectivityReceiver.ConnectivityReceiverList
 
     override fun onNetworkConnectionChanged(isConnected: Boolean) {
         if (isConnected) {
-            Log.v("crpyoy", "network connected trades ")
             startWebsocket()
         } else {
-            Log.v("crpyoy", "network disconnected trades")
-
             stopWebsocket()
         }
     }
