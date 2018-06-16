@@ -26,9 +26,11 @@ class OrderAdapter(private val context: Context, private val isBid: Boolean, pri
     }
 
     fun setData(newOrders: List<Triple<Double, Double, Int>>) {
-        orders.clear()
-        orders.addAll(newOrders)
-        context.runOnUiThread { notifyDataSetChanged() }
+        context.runOnUiThread {
+            orders.clear()
+            orders.addAll(newOrders)
+            notifyDataSetChanged()
+        }
     }
 }
 

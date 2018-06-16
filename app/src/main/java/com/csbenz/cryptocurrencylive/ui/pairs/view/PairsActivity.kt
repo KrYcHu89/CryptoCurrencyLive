@@ -42,7 +42,6 @@ class PairsActivity : AppCompatActivity(), PairsView {
     override fun showPairs(pairs: List<String>) {
         presenter.pairs = pairs
         pairAdapter.notifyDataSetChanged()
-        Log.v("crpyto", pairs[0])
     }
 
     override fun displayNoNetworkSnackbar() {

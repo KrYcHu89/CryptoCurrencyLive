@@ -1,10 +1,13 @@
 package com.csbenz.cryptocurrencylive.ui.details
 
+import android.content.IntentFilter
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import com.csbenz.cryptocurrencylive.Constants
 import com.csbenz.cryptocurrencylive.R
+import com.csbenz.cryptocurrencylive.network.ConnectivityReceiver
 import com.csbenz.cryptocurrencylive.network.NetworkUtils
 import com.csbenz.cryptocurrencylive.utils.Utils
 import kotlinx.android.synthetic.main.activity_details.*
@@ -18,10 +21,12 @@ class DetailsActivity : AppCompatActivity() {
 
     private lateinit var pairName: String
     private lateinit var noNetworkSnackbar: Snackbar
+    private lateinit var connectivityReceiver: ConnectivityReceiver
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_details)
+
 
         pairName = intent.getStringExtra(Constants.PAIR_NAME_BUNDLE_ID)
         (this as AppCompatActivity).supportActionBar?.title = pairName
@@ -35,7 +40,15 @@ class DetailsActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
 
+        connectivityReceiver = ConnectivityReceiver()
+        registerReceiver(connectivityReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
         fetchSummary()
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        unregisterReceiver(connectivityReceiver)
     }
 
     private fun fetchSummary() {

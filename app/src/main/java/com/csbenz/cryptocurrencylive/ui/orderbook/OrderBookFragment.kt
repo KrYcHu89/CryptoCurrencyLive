@@ -10,14 +10,14 @@ import android.view.View
 import android.view.ViewGroup
 import com.csbenz.cryptocurrencylive.Constants
 import com.csbenz.cryptocurrencylive.R
+import com.csbenz.cryptocurrencylive.network.ConnectivityReceiver
 import com.csbenz.cryptocurrencylive.utils.Utils
 import kotlinx.android.synthetic.main.fragment_orderbook.*
 import okhttp3.*
 import org.json.JSONArray
 import org.json.JSONTokener
 
-class OrderBookFragment : Fragment() {
-
+class OrderBookFragment : Fragment(), ConnectivityReceiver.ConnectivityReceiverListener {
 
     private val ORDERS_TO_DISPLAY = 15
 
@@ -62,6 +62,12 @@ class OrderBookFragment : Fragment() {
         startWebsocket()
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        ConnectivityReceiver.orderBookConnectivityReceiverListener = this
+    }
+
     override fun onStop() {
         super.onStop()
 
@@ -80,6 +86,17 @@ class OrderBookFragment : Fragment() {
 
     private fun stopWebsocket() {
         websocket.cancel()
+    }
+
+    override fun onNetworkConnectionChanged(isConnected: Boolean) {
+        if (isConnected) {
+            Log.v("crpyoy", "network connected order book")
+            startWebsocket()
+        } else {
+            Log.v("crpyoy", "network disconnected order book")
+
+            stopWebsocket()
+        }
     }
 
     fun parseNewUpdate(jsonArray: JSONArray) {

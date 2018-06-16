@@ -4,18 +4,20 @@ import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.csbenz.cryptocurrencylive.Constants
 import com.csbenz.cryptocurrencylive.R
+import com.csbenz.cryptocurrencylive.network.ConnectivityReceiver
 import com.csbenz.cryptocurrencylive.utils.Utils
 import kotlinx.android.synthetic.main.fragment_trades.*
 import okhttp3.*
 import org.json.JSONArray
 import org.json.JSONTokener
 
-class TradesFragment : Fragment() {
+class TradesFragment : Fragment(), ConnectivityReceiver.ConnectivityReceiverListener {
 
     private lateinit var mContext: Context
     private lateinit var websocket: WebSocket
@@ -51,6 +53,12 @@ class TradesFragment : Fragment() {
         startWebsocket()
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        ConnectivityReceiver.tradesConnectivityReceiverListener = this
+    }
+
     override fun onStop() {
         super.onStop()
 
@@ -69,6 +77,17 @@ class TradesFragment : Fragment() {
 
     private fun stopWebsocket() {
         websocket.cancel()
+    }
+
+    override fun onNetworkConnectionChanged(isConnected: Boolean) {
+        if (isConnected) {
+            Log.v("crpyoy", "network connected trades ")
+            startWebsocket()
+        } else {
+            Log.v("crpyoy", "network disconnected trades")
+
+            stopWebsocket()
+        }
     }
 
     fun parseNewUpdate(jsonArray: JSONArray) {
