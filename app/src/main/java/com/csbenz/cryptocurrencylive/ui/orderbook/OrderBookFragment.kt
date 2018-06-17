@@ -59,12 +59,6 @@ class OrderBookFragment : Fragment(), ConnectivityReceiver.ConnectivityReceiverL
     override fun onStart() {
         super.onStart()
 
-        startWebsocket()
-    }
-
-    override fun onResume() {
-        super.onResume()
-
         ConnectivityReceiver.orderBookConnectivityReceiverListener = this
     }
 
@@ -85,7 +79,7 @@ class OrderBookFragment : Fragment(), ConnectivityReceiver.ConnectivityReceiverL
     }
 
     private fun stopWebsocket() {
-        websocket.cancel()
+        websocket.close(1000, "closing")
     }
 
     override fun onNetworkConnectionChanged(isConnected: Boolean) {
@@ -112,7 +106,7 @@ class OrderBookFragment : Fragment(), ConnectivityReceiver.ConnectivityReceiverL
                         orderBook.processNewOrder(orders.getDouble(0), orders.getInt(1), orders.getDouble(2))
                     }
                     else -> {
-                        Log.v("cc", "Something even more complicated: " + orders[0].toString())
+                        Log.v("cc", "Something even more complicated: " + orders[0].toString() + pairName)
                     }
                 }
 
@@ -137,6 +131,7 @@ class OrderBookFragment : Fragment(), ConnectivityReceiver.ConnectivityReceiverL
 
         override fun onOpen(webSocket: WebSocket, response: Response) {
             webSocket.send(Utils.createBookRequest(pairName))
+
         }
 
         override fun onMessage(webSocket: WebSocket?, text: String?) {
@@ -150,17 +145,9 @@ class OrderBookFragment : Fragment(), ConnectivityReceiver.ConnectivityReceiverL
             }
         }
 
-        override fun onFailure(webSocket: WebSocket, t: Throwable?, response: Response?) {
-            super.onFailure(webSocket, t, response)
-            Log.v("crypto", "onFailure orderbook!!")
-
+        override fun onClosing(webSocket: WebSocket?, code: Int, reason: String?) {
+            super.onClosing(webSocket, code, reason)
+            webSocket?.close(1000, "closing")
         }
-
-        /*
-        override fun onClosing(webSocket: WebSocket, code: Int, reason: String?) {
-            webSocket.close(1000, null)
-        }
-        */
-
     }
 }

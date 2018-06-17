@@ -15,11 +15,7 @@ class OrderBook(val book: TreeMap<Double, Pair<Double, Int>> = TreeMap()) {
     }
 
     fun addOrder(price: Double, count: Int, amount: Double) {
-        if (book.containsKey(price) && book[price] != null) {
-            book[price] = Pair(book[price]!!.first, book[price]!!.second)
-        } else {
-            book[price] = Pair(amount, count)
-        }
+        book[price] = Pair(amount, count)
     }
 
     fun removeOrder(price: Double) {

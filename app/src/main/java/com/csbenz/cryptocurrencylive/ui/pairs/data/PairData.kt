@@ -11,9 +11,9 @@ import org.json.JSONArray
 import java.io.FileNotFoundException
 import java.net.URL
 
-class PairData(private val context: Context) {
+open class PairData(private val context: Context) {
 
-    fun fetchPairs(dataLoaderListener: DataLoaderListener) {
+    open fun fetchPairs(dataLoaderListener: DataLoaderListener) {
         if (NetworkUtils.isNetworkAvailable(context)) {
 
             doAsync {

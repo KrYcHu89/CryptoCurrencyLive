@@ -46,12 +46,6 @@ class TradesFragment : Fragment(), ConnectivityReceiver.ConnectivityReceiverList
 
     }
 
-    override fun onStart() {
-        super.onStart()
-
-        startWebsocket()
-    }
-
     override fun onResume() {
         super.onResume()
 
@@ -75,7 +69,7 @@ class TradesFragment : Fragment(), ConnectivityReceiver.ConnectivityReceiverList
     }
 
     private fun stopWebsocket() {
-        websocket.cancel()
+        websocket.close(1000, "closing")
     }
 
     override fun onNetworkConnectionChanged(isConnected: Boolean) {
@@ -134,11 +128,11 @@ class TradesFragment : Fragment(), ConnectivityReceiver.ConnectivityReceiverList
             }
         }
 
-        /*
-        override fun onClosing(webSocket: WebSocket, code: Int, reason: String?) {
-            webSocket.close(1000, null)
+
+        override fun onClosing(webSocket: WebSocket?, code: Int, reason: String?) {
+            super.onClosing(webSocket, code, reason)
+            webSocket?.close(1000, "closing")
         }
-        */
 
     }
 }

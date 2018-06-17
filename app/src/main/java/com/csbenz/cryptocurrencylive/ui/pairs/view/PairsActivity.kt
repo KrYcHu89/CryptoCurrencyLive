@@ -18,7 +18,7 @@ class PairsActivity : AppCompatActivity(), PairsView {
     private lateinit var presenter: PairPresenter
 
     private lateinit var pairAdapter: PairAdapter
-    private lateinit var noNetworkSnackbar: Snackbar
+    lateinit var noNetworkSnackbar: Snackbar
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
